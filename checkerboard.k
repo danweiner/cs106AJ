@@ -59,6 +59,7 @@ function turnAround() {
    turnLeft();
 }
 
+// This puts one beeper on every other corner
 function putChecker() {
    putBeeper();
    while (frontIsClear()) {
