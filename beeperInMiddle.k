@@ -1,6 +1,19 @@
+/**
+ * Daniel Weiner
+ * 
+ * This program places a beeper in the center of
+ * first street.
+ * 
+ * In worlds of length 8 it leaves the beeper on corner
+ * 4.
+ * 
+ * In worlds of length 4 it leaves the beeper on corner
+ * 3.
+ **/
 function main(){
    putChecker();
    turnAround();
+   // even length worlds, put beeper at east end
    if (noBeepersPresent()) { 
       putBeeper();
    }
@@ -11,13 +24,18 @@ function main(){
       moveToBeeper();
       buildBeeperWall();
    }
+   
    turnAround();
+   
+   // in small worlds (3*3, 4*4, karel is on an empty 
+   // corner on 1, 1.  move to a corner with a beeper
    if (noBeepersPresent()) {
       move();
    }
    pickUpLineOfBeepers();
    backUp();
    putBeeper();
+   
    
    
    
