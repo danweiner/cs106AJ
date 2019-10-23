@@ -22,6 +22,7 @@ function putBeeperAtMidPoint() {
 // Moves Karel to center corner of first street
 function findMidPoint() {
    putBeeperOnEveryOtherCorner();
+   turnAround();
    makeLineOfBeepersFromEdgeToMidpoint();
    turnAround();
    collectLineOfBeepers();
@@ -46,12 +47,12 @@ function makeLineOfBeepersFromEdgeToMidpoint() {
    if (noBeepersPresent()) {
       putBeeper();
    }
-   turnAround();
+   
    moveToEndOfBeeperLine();
    // While picking up beepers
    while (frontIsClear()) {
       moveToNearestBeeper();
-      depositBeeper();
+      buildBeeperWall();
    }
 }
 
@@ -83,18 +84,27 @@ function moveToEndOfBeeperLine() {
 }
 
 
-function depositBeeper() {
+function buildBeeperWall() {
    // only collect beeper if facing west
    if (rightIsClear()) {
       turnAround();
       pickBeeper();
-      moveToNearestBeeper();
-      turnAround();
-      move();
-      putBeeper();
-      move();
+      moveToBeeperWall();
+      depositCurrentBeeper();
+      
    }
    
+}
+
+function moveToBeeperWall() {
+   moveToNearestBeeper();
+}
+
+function depositCurrentBeeper() {
+   turnAround();
+   move();
+   putBeeper();
+   move();
 }
 
 function moveToWall() {
