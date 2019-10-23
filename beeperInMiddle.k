@@ -46,7 +46,7 @@ function makeLineOfBeepersFromEdgeToMidpoint() {
    if (noBeepersPresent()) {
       putBeeper();
    }
-   
+   turnAround();
    moveToEndOfBeeperLine();
    // While picking up beepers
    while (frontIsClear()) {
@@ -75,7 +75,6 @@ function moveToNearestBeeper() {
 }
 
 function moveToEndOfBeeperLine() {
-   turnAround();
    while (beepersPresent()) {
       if (frontIsClear()) {
          move();
@@ -85,6 +84,7 @@ function moveToEndOfBeeperLine() {
 
 
 function depositBeeper() {
+   // only collect beeper if facing west
    if (rightIsClear()) {
       turnAround();
       pickBeeper();
