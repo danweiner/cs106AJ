@@ -11,39 +11,26 @@
  * 3.
  **/
 function main(){
-   putChecker();
-   turnAround();
-   // even length worlds, put beeper at east end
-   if (noBeepersPresent()) { 
-      putBeeper();
-   }
-   
-   moveToFreeSpace();
-   
-   while (frontIsClear()) {
-      moveToBeeper();
-      buildBeeperWall();
-   }
-   
-   turnAround();
-   
-   // in small worlds (3*3, 4*4, karel is on an empty 
-   // corner on 1, 1.  move to a corner with a beeper
-   if (noBeepersPresent()) {
-      move();
-   }
-   pickUpLineOfBeepers();
-   backUp();
-   putBeeper();
-   
-   
-   
-   
+   putBeeperAtMidPoint();
 }
 
+function putBeeperAtMidPoint() {
+   findMidPoint();
+   placeMidBeeper();
+}
 
-// put a beeper on every other corner
-function putChecker() {
+// Moves Karel to center corner of first street
+function findMidPoint() {
+   putBeeperOnEveryOtherCorner();
+   makeLineOfBeepersFromEdgeToMidpoint();
+   turnAround();
+   collectLineOfBeepers();
+   backup();
+}
+
+// Puts a beeper on every other corner
+// Karel finished on east edge facing east
+function putBeeperOnEveryOtherCorner() {
    putBeeper();
    while (frontIsClear()) {
       move();
@@ -54,16 +41,60 @@ function putChecker() {
    }
 }
 
-// move from end of block back to 1, 1, facing east
-function returnHome() {
-   turnAround();
-   moveToWall();
-   turnAround();
+// Makes a line of beepers from east edge to center corner
+function makeLineOfBeepersFromEdgeToMidpoint() {
+   if (noBeepersPresent()) {
+      putBeeper();
+   }
+   
+   moveToEndOfBeeperLine();
+   // While picking up beepers
+   while (frontIsClear()) {
+      moveToNearestBeeper();
+      depositBeeper();
+   }
 }
 
 function turnAround() {
    turnLeft();
    turnLeft();
+}
+
+// Moves Karel from a corner with no beepers to a 
+// corner with a beeper
+function moveToNearestBeeper() {
+   while (noBeepersPresent() ) {
+      if (frontIsClear()) {
+         move();
+      } else {
+         // facing a wall with no beepers
+         turnAround();
+         moveToWall();
+      }
+   }
+}
+
+function moveToEndOfBeeperLine() {
+   turnAround();
+   while (beepersPresent()) {
+      if (frontIsClear()) {
+         move();
+      } 
+   }
+}
+
+
+function depositBeeper() {
+   if (rightIsClear()) {
+      turnAround();
+      pickBeeper();
+      moveToNearestBeeper();
+      turnAround();
+      move();
+      putBeeper();
+      move();
+   }
+   
 }
 
 function moveToWall() {
@@ -72,56 +103,31 @@ function moveToWall() {
    }
 }
 
-// moves karel to a corner without a beeper on it
-function moveToFreeSpace() {
-   while (beepersPresent()) {
-      move();
-      
-   }
-}
-
-// moves karel to nearest beeper (if beepers left in world)
-// otherwise places one beeper (to exit loop)
-function moveToBeeper() {
-   while (noBeepersPresent()) {
-      if (frontIsClear()) {
-         move();
-      } else {
-         turnAround();
-         moveToWall();
-      }
-   }
-}
-
-// Karel is standing on a beeper facing east
-// karel will build a line of beepers starting at 1, 1
-function buildBeeperWall() { 
-   if (leftIsBlocked()) {
-      pickBeeper();
-      turnAround();
-      moveToBeeper();
-      turnAround();
-      move();
-      putBeeper();
-      move();
-   } 
-   
-}
-
-function pickUpLineOfBeepers() {
-   
-   while (beepersPresent() ) {
-      pickBeeper();
-      if (frontIsClear() ) {
-         move();
-      }
-   }
-}
-
-function backUp() {
+function backup() {
    turnAround();
    if (frontIsClear()) {
       move();
    }
-   
+   turnAround();
 }
+
+function collectLineOfBeepers() {
+   if (noBeepersPresent()) {
+      move();
+   }
+   while (beepersPresent()) {
+      pickBeeper();
+      if (frontIsClear()) {
+         move();
+      }
+      
+   }
+}
+
+function placeMidBeeper() {
+   if (leftIsBlocked()) {
+      turnAround();
+   }
+   putBeeper();
+}
+
